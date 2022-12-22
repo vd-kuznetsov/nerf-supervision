@@ -1024,6 +1024,7 @@ def train():
         if args.i_video > 0 and i%args.i_video==0 and i > 0:
             # Turn on testing mode
             with torch.no_grad():
+                print('Hello')
                 rgbs, disps = render_path(render_poses, hwf, args.chunk, render_kwargs_test)
             print('Done, saving', rgbs.shape, disps.shape)
             moviebase = os.path.join(basedir, expname, '{}_spiral_{:06d}_'.format(expname, i))
@@ -1042,7 +1043,7 @@ def train():
 
             filenames = [os.path.join(testsavedir, '{:03d}.png'.format(k)) for k in range(len(i_test))]
 
-            test_loss = img2mse(torch.Tensor(rgbs), images[i_test])
+            test_loss = img2mse(torch.Tensor(rgbs).to(device), torch.Tensor(images[i_test]).to(device))
             test_psnr = mse2psnr(test_loss)
 
     
@@ -1053,6 +1054,6 @@ def train():
 
 
 if __name__=='__main__':
-    torch.set_default_tensor_type('torch.cuda.FloatTensor')
+    #torch.set_default_tensor_type('torch.cuda.FloatTensor')
 
     train()
